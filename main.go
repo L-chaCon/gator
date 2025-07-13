@@ -3,9 +3,14 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/L-chaCon/gator/internal/config"
 )
+
+type state struct {
+	cfg *config.Config
+}
 
 func main() {
 	cfg, err := config.Read()
@@ -14,14 +19,27 @@ func main() {
 	}
 	fmt.Printf("Read config: %+v\n", cfg)
 
-	err = cfg.SetUser("chaCon")
-	if err != nil {
-		log.Fatalf("couldn't set current user: %v", err)
+	s := state{cfg: &cfg}
+	commands := commands{
+		commands: make(map[string]func(*state, command) error),
 	}
 
-	cfg, err = config.Read()
-	if err != nil {
-		log.Fatalf("Error reading config %v", err)
+	commands.register("login", handlerLogin)
+
+	args := os.Args
+
+	if len(args) < 2 {
+		log.Fatalf("Not enought arguments %v", args)
+		return
 	}
-	fmt.Println(cfg)
+
+	command := command{
+		name:      args[1],
+		arguments: args[2:],
+	}
+
+	err = commands.run(&s, command)
+	if err != nil {
+		log.Fatalf("Error running command %v", err)
+	}
 }
