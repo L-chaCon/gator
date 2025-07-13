@@ -19,26 +19,25 @@ func main() {
 	}
 	fmt.Printf("Read config: %+v\n", cfg)
 
-	s := state{cfg: &cfg}
-	commands := commands{
-		commands: make(map[string]func(*state, command) error),
+	programState := &state{
+		cfg: &cfg,
 	}
 
-	commands.register("login", handlerLogin)
+	cmds := commands{
+		registeredCommands: make(map[string]func(*state, command) error),
+	}
+	cmds.register("login", handlerLogin)
 
-	args := os.Args
-
-	if len(args) < 2 {
-		log.Fatalf("Not enought arguments %v", args)
-		return
+	if len(os.Args) < 2 {
+		log.Fatalf("Usage: cli <command> [args...] | args: %v", os.Args)
 	}
 
-	command := command{
-		name:      args[1],
-		arguments: args[2:],
+	cmd := command{
+		Name: os.Args[1],
+		Args: os.Args[2:],
 	}
 
-	err = commands.run(&s, command)
+	err = cmds.run(programState, cmd)
 	if err != nil {
 		log.Fatalf("Error running command %v", err)
 	}
