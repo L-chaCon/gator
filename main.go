@@ -1,20 +1,27 @@
 package main
 
-import "fmt"
-import "github.com/L-chaCon/gator/internal/config"
+import (
+	"fmt"
+	"log"
+
+	"github.com/L-chaCon/gator/internal/config"
+)
 
 func main() {
-	fmt.Println("Reading config...")
 	cfg, err := config.Read()
 	if err != nil {
-		fmt.Printf("Error reading config %v", err)
+		log.Fatalf("Error reading config %v", err)
 	}
+	fmt.Printf("Read config: %+v\n", cfg)
 
-	cfg.SetUser("chaCon")
+	err = cfg.SetUser("chaCon")
+	if err != nil {
+		log.Fatalf("couldn't set current user: %v", err)
+	}
 
 	cfg, err = config.Read()
 	if err != nil {
-		fmt.Printf("Error reading config %v", err)
+		log.Fatalf("Error reading config %v", err)
 	}
 	fmt.Println(cfg)
 }
