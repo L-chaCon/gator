@@ -56,3 +56,33 @@ func printUser(user database.User) {
 	fmt.Printf(" * ID:      %v\n", user.ID)
 	fmt.Printf(" * Name:    %v\n", user.Name)
 }
+
+func handlerGetUsers(s *state, cmd command) error {
+	if len(cmd.Args) != 0 {
+		return fmt.Errorf("usage: %s", cmd.Name)
+	}
+
+	users, err := s.db.GetUsers(context.Background())
+	if err != nil {
+		return fmt.Errorf("Not able to get users. %w", err)
+	}
+	err = printUserList(users, s.cfg.CurrentUserName)
+	if err != nil {
+		return fmt.Errorf("Not able to print user list. %w", err)
+	}
+	return nil
+}
+
+func printUserList(users []database.User, currentUser string) error {
+	if len(users) == 0 {
+		return errors.New("No users in the database")
+	}
+	for _, user := range users {
+		if user.Name == currentUser {
+			fmt.Printf("* %s (current)\n", user.Name)
+		} else {
+			fmt.Printf("* %s\n", user.Name)
+		}
+	}
+	return nil
+}
