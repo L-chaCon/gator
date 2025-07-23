@@ -15,11 +15,11 @@ func handlerLogin(s *state, cmd command) error {
 	}
 	user, err := s.db.GetUser(context.Background(), cmd.Args[0])
 	if err != nil {
-		return fmt.Errorf("Not able to find name in database. %w", err)
+		return fmt.Errorf("not able to find name in database. %w", err)
 	}
 	err = s.cfg.SetUser(user.Name)
 	if err != nil {
-		return fmt.Errorf("Not able to set current user: %w", err)
+		return fmt.Errorf("not able to set current user: %w", err)
 	}
 
 	fmt.Printf("You have been login with %s\n", cmd.Args[0])
@@ -32,7 +32,7 @@ func handlerRegister(s *state, cmd command) error {
 	}
 	_, err := s.db.GetUser(context.Background(), cmd.Args[0])
 	if err == nil {
-		return errors.New("User already exist")
+		return errors.New("user already exist")
 	}
 	newUser, err := s.db.CreateUser(
 		context.Background(),
@@ -42,11 +42,11 @@ func handlerRegister(s *state, cmd command) error {
 		},
 	)
 	if err != nil {
-		return fmt.Errorf("Not able to create user. %w", err)
+		return fmt.Errorf("not able to create user. %w", err)
 	}
 	err = s.cfg.SetUser(newUser.Name)
 	if err != nil {
-		return fmt.Errorf("Not able to set user. %w", err)
+		return fmt.Errorf("not able to set user. %w", err)
 	}
 	printUser(newUser)
 	return nil
@@ -64,18 +64,18 @@ func handlerGetUsers(s *state, cmd command) error {
 
 	users, err := s.db.GetUsers(context.Background())
 	if err != nil {
-		return fmt.Errorf("Not able to get users. %w", err)
+		return fmt.Errorf("not able to get users. %w", err)
 	}
 	err = printUserList(users, s.cfg.CurrentUserName)
 	if err != nil {
-		return fmt.Errorf("Not able to print user list. %w", err)
+		return fmt.Errorf("not able to print user list. %w", err)
 	}
 	return nil
 }
 
 func printUserList(users []database.User, currentUser string) error {
 	if len(users) == 0 {
-		return errors.New("No users in the database")
+		return errors.New("no users in the database")
 	}
 	for _, user := range users {
 		if user.Name == currentUser {

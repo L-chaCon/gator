@@ -11,7 +11,7 @@ func handlerReset(s *state, cmd command) error {
 	}
 	err := s.db.DeleteUsers(context.Background())
 	if err != nil {
-		return fmt.Errorf("Not able to truncate the table. %w", err)
+		return fmt.Errorf("not able to truncate the table. %w", err)
 	}
 	return nil
 }

@@ -20,7 +20,7 @@ func (c *commands) register(name string, f func(*state, command) error) {
 func (c *commands) run(s *state, cmd command) error {
 	callback, ok := c.registeredCommands[cmd.Name]
 	if !ok {
-		return fmt.Errorf("No handeler for %s command", cmd.Name)
+		return fmt.Errorf("no handeler for %s command", cmd.Name)
 	}
 	return callback(s, cmd)
 }
