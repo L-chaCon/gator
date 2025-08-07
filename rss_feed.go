@@ -26,28 +26,15 @@ type RSSItem struct {
 	PubDate     string `xml:"pubDate"`
 }
 
-func handlerGetFeed(s *state, cmd command) error {
-	if len(cmd.Args) != 0 {
-		return fmt.Errorf("usage: %s", cmd.Name)
-	}
-	ctx := context.Background()
-	feed, err := fetchFeed(ctx, "https://www.wagslane.dev/index.xml")
-	if err != nil {
-		return fmt.Errorf("error fetchFeed: %w", err)
-	}
-	fmt.Printf("%+v\n", feed)
-
-	return nil
-}
-
 func fetchFeed(ctx context.Context, feedURL string) (*RSSFeed, error) {
+	// Make the request
 	req, err := http.NewRequestWithContext(ctx, "GET", feedURL, nil)
 	if err != nil {
 		return nil, err
 	}
-
 	req.Header.Set("User-Agent", "gator")
 
+	// Create and use the client
 	client := &http.Client{
 		Timeout: 30 * time.Second,
 	}
@@ -62,6 +49,7 @@ func fetchFeed(ctx context.Context, feedURL string) (*RSSFeed, error) {
 		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 
+	// Read the data from the response
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read response body: %w", err)
@@ -75,6 +63,11 @@ func fetchFeed(ctx context.Context, feedURL string) (*RSSFeed, error) {
 
 	feed.Channel.Title = html.UnescapeString(feed.Channel.Title)
 	feed.Channel.Title = html.UnescapeString(feed.Channel.Title)
+	for i, item := range feed.Channel.Item {
+		item.Title = html.UnescapeString(item.Title)
+		item.Description = html.UnescapeString(item.Description)
+		feed.Channel.Item[i] = item
+	}
 
 	return &feed, nil
 }
