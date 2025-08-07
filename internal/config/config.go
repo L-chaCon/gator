@@ -1,3 +1,4 @@
+// Package config implets the read and write of the application config
 package config
 
 import (
