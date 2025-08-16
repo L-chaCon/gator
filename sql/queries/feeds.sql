@@ -49,3 +49,10 @@ SELECT feeds.name, feeds.url FROM feed_follows
 LEFT JOIN feeds
   ON feeds.id = feed_follows.feed_id
 WHERE feed_follows.user_id = $1;
+
+
+-- name: UnfollowForUser :one
+DELETE FROM feed_follows
+WHERE user_id = $1 
+  AND feed_id = $2
+RETURNING *;
