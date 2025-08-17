@@ -54,7 +54,7 @@ func scrapeFeed(s *state, feed database.Feed) error {
 			return fmt.Errorf("error at publishAt parse: %w", err)
 		}
 
-		post, err := s.db.CreatePost(
+		_, err = s.db.CreatePost(
 			context.Background(),
 			database.CreatePostParams{
 				ID:          uuid.New(),
@@ -77,8 +77,6 @@ func scrapeFeed(s *state, feed database.Feed) error {
 				return err
 			}
 		}
-		_ = post
-		// printPost(post)
 	}
 	return nil
 }
@@ -97,12 +95,4 @@ func parseDate(strinDate string) (time.Time, error) {
 		}
 	}
 	return time.Time{}, fmt.Errorf("unable to parse date: %s", strinDate)
-}
-
-func printPost(post database.Post) {
-	fmt.Printf(" * Title:       %s\n", post.Title.String)
-	fmt.Printf(" * Description: %s\n", post.Description.String)
-	fmt.Printf(" * publishAt:   %s\n", post.PublishedAt.Time)
-	fmt.Printf(" * Url:         %s\n", post.Url.String)
-	fmt.Println("==========================")
 }

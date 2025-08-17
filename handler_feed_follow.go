@@ -79,10 +79,3 @@ func handlerUnfollow(s *state, cmd command, user database.User) error {
 	fmt.Printf("User: %s has unfollow %s", user.Name, feed.Url)
 	return nil
 }
-
-func printFollow(feedFollow database.CreateFeedFollowRow) {
-	fmt.Printf(" * ID:           %v\n", feedFollow.ID)
-	fmt.Printf(" * User name:    %v\n", feedFollow.UserName)
-	fmt.Printf(" * Feed name:    %v\n", feedFollow.FeedName)
-	fmt.Println("=====================================")
-}

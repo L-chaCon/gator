@@ -52,11 +52,6 @@ func handlerRegister(s *state, cmd command) error {
 	return nil
 }
 
-func printUser(user database.User) {
-	fmt.Printf(" * ID:      %v\n", user.ID)
-	fmt.Printf(" * Name:    %v\n", user.Name)
-}
-
 func handlerGetUsers(s *state, cmd command) error {
 	if len(cmd.Args) != 0 {
 		return fmt.Errorf("usage: %s", cmd.Name)
@@ -69,20 +64,6 @@ func handlerGetUsers(s *state, cmd command) error {
 	err = printUserList(users, s.cfg.CurrentUserName)
 	if err != nil {
 		return fmt.Errorf("not able to print user list. %w", err)
-	}
-	return nil
-}
-
-func printUserList(users []database.User, currentUser string) error {
-	if len(users) == 0 {
-		return errors.New("no users in the database")
-	}
-	for _, user := range users {
-		if user.Name == currentUser {
-			fmt.Printf("* %s (current)\n", user.Name)
-		} else {
-			fmt.Printf("* %s\n", user.Name)
-		}
 	}
 	return nil
 }
