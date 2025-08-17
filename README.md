@@ -1,5 +1,8 @@
 # Gator - RSS Feed Aggregator
 
+> [!Note] 
+> This project was built as part of the Boot.dev curriculum. All credit for the project design, requirements, and learning objectives goes to Boot.dev. This is a guided project from their Go course focusing on building real-world applications with Go and PostgreSQL.
+
 A powerful CLI tool for aggregating and managing RSS feeds. Gator allows you to collect RSS feeds from across the internet, store posts in a PostgreSQL database, and browse aggregated content directly from your terminal.
 
 ## Features
