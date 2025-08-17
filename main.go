@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"os"
 
@@ -21,7 +20,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error reading config %v", err)
 	}
-	fmt.Printf("Read config: %+v\n", cfg)
 	db, err := sql.Open("postgres", cfg.DBURL)
 	if err != nil {
 		log.Fatalf("Error connecting to the db. %v", err)
@@ -47,6 +45,7 @@ func main() {
 	cmds.register("follow", middlewareLoggedIn(handlerFollow))
 	cmds.register("following", middlewareLoggedIn(handlerFollowing))
 	cmds.register("unfollow", middlewareLoggedIn(handlerUnfollow))
+	cmds.register("browse", middlewareLoggedIn(headerBrowse))
 
 	if len(os.Args) < 2 {
 		log.Fatalf("Usage: cli <command> [args...] | args: %v", os.Args)
