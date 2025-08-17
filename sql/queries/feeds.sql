@@ -60,9 +60,9 @@ RETURNING *;
 
 -- name: MarkFeedFetched :one
 UPDATE feeds SET 
-  last_fetched_at = $1,
-  updated_at = $1
-WHERE id = $2
+  last_fetched_at = now(),
+  updated_at = now()
+WHERE id = $1
 RETURNING *;
 
 

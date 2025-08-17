@@ -2,11 +2,8 @@ package main
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"time"
-
-	"github.com/L-chaCon/gator/internal/database"
 )
 
 func handlerAgg(s *state, cmd command) error {
@@ -31,10 +28,7 @@ func scrapeFeeds(s *state) error {
 		return fmt.Errorf("error GetNextFeedToFetch: %w", err)
 	}
 
-	updateFeed, err := s.db.MarkFeedFetched(context.Background(), database.MarkFeedFetchedParams{
-		ID:            feed.ID,
-		LastFetchedAt: sql.NullTime{Time: time.Now().UTC(), Valid: true},
-	})
+	updateFeed, err := s.db.MarkFeedFetched(context.Background(), feed.ID)
 	if err != nil {
 		return fmt.Errorf("error MarkFeedFetched: %w", err)
 	}
